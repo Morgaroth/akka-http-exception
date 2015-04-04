@@ -16,7 +16,8 @@ crossScalaVersions := Seq("2.10.4", "2.11.6")
 scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "1.0-M5"
+  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "1.0-M5",
+  "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
 buildInfoSettings

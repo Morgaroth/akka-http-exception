@@ -7,7 +7,7 @@ import scala.language.implicitConversions
 case class ExceptionWrapper(
                              detailMessage: String = "",
                              localizedMessage: String = "",
-                             cause: ExceptionWrapper = null,
+                             cause: Option[ExceptionWrapper] = None,
                              stackTrace: List[StackTraceElementWrapper] = Nil,
                              supressed: List[ExceptionWrapper] = Nil
                              )
@@ -31,7 +31,7 @@ object ExceptionWrapper {
   implicit def wrapThrowable(t: Throwable): ExceptionWrapper = new ExceptionWrapper(
     t.getMessage,
     t.getLocalizedMessage,
-    if (t.getCause == t) null else wrapThrowable(t.getCause),
+    if (t.getCause == t || t.getCause == null) None else Some(wrapThrowable(t.getCause)),
     t.getStackTrace.map(wrapStackStraceElement).toList,
     t.getSuppressed.toList.map(wrapThrowable)
   )
