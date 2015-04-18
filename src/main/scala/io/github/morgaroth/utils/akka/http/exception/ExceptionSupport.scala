@@ -1,5 +1,6 @@
 package io.github.morgaroth.utils.akka.http.exception
 
+import io.github.morgaroth.utils.akka.http.exception.StackTraceElementWrapper.wrapStackStraceElement
 import spray.json.{DefaultJsonProtocol, JsonFormat, RootJsonFormat}
 
 import scala.language.implicitConversions
@@ -25,13 +26,10 @@ object StackTraceElementWrapper {
 }
 
 object ExceptionWrapper {
-
-  import StackTraceElementWrapper.wrapStackStraceElement
-
   implicit def wrapThrowable(t: Throwable): ExceptionWrapper = new ExceptionWrapper(
     t.getMessage,
     t.getLocalizedMessage,
-    if (t.getCause == t || t.getCause == null) None else Some(wrapThrowable(t.getCause)),
+    Option(t.getCause).flatMap(x => if (t == x) None else Some(x)).map(wrapThrowable),
     t.getStackTrace.map(wrapStackStraceElement).toList,
     t.getSuppressed.toList.map(wrapThrowable)
   )
